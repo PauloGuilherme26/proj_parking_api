@@ -1,0 +1,8 @@
+package com.parking.proj_parking_api.exception;
+
+public class EntityNotFoundException extends RuntimeException{
+
+    public EntityNotFoundException (String message){
+        super(message);
+    }
+}
