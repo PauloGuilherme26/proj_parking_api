@@ -41,8 +41,4 @@ public AuthenticationManager authenticationManager (AuthenticationConfiguration 
     return authenticationConfiguration.getAuthenticationManager();
 } 
 
-
-
-
-
 }
