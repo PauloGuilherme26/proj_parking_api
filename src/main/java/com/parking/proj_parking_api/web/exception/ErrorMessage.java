@@ -26,7 +26,7 @@ private String message;
 private Map<String, String> errors; // chave = campo e valor = message
 
 
-public ErrorMessage() {
+public ErrorMessage() { // teste de branch
 
 }
 
