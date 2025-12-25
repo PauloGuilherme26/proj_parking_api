@@ -64,7 +64,8 @@ public class UsuarioController {
         }
     )
     @GetMapping("/{id}")    // Buscar usuário pelo Id.
-    @PreAuthorize("hasRole('ADMIN')")                                             //Permissão de autorização do perfil Admin
+    @PreAuthorize("hasRole('ADMIN') OR ( hasRole('CLIENTE') AND #id == authentication.principal.id)") 
+    //Permissão de acesso do perfil Admin  OU  Permissão de acesso do perfil Cliente E somente dados dele próprio 
     public ResponseEntity<UsuarioResponseDto> getById (@PathVariable long id) {
         Usuario user = usuarioService.buscarPorId(id);
         return ResponseEntity.ok(UsuarioMapper.toDto(user));
