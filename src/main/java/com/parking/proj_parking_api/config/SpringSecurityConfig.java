@@ -14,6 +14,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
+import com.parking.proj_parking_api.jwt.JwtAuthenticationEntryPoint;
 import com.parking.proj_parking_api.jwt.JwtAuthorizationFilter;
 
 @EnableMethodSecurity
@@ -31,9 +32,10 @@ public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
             .authorizeHttpRequests(auth -> auth
                                             .requestMatchers(HttpMethod.POST, "api/v1/usuarios").permitAll()
                                             .requestMatchers(HttpMethod.POST, "api/v1/auth").permitAll()
-                                            .anyRequest().authenticated())
+                                            .anyRequest().authenticated() )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .exceptionHandling(ex -> ex.authenticationEntryPoint( new JwtAuthenticationEntryPoint() ) )   
             .build();   
     }
 
