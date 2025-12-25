@@ -93,16 +93,19 @@ public class UsuarioController {
             //novaSenha
             //confirmaSenha
 
-    @PatchMapping("/{id}")  // Alteração de Senha do usuário.   //@PathVariable - Torna o "Id" um valor variável.
-    //public ResponseEntity <UsuarioResponseDto> updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
-    public ResponseEntity      <Void>        updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
+    @PatchMapping("/{id}")  // Alteração de Senha do usuário.   
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENTE') AND (#id == authentication.principal.id)")
+    //Permissão de acesso do perfil Admin ou Cliente para alterar apenas sua própria senha.
+                                                            //@PathVariable - Torna o "Id" um valor variável.
+  //public ResponseEntity <UsuarioResponseDto> updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
+    public ResponseEntity      <Void>          updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
             Usuario user = usuarioService.editarSenha (
                 id, 
                 dto.getSenhaAtual(),
                 dto.getNovaSenha(),             //Existem duas opções para o retorno: Status 200 ou Status 204(sem reorno)
                 dto.getConfirmaSenha());
 
-        //return ResponseEntity.ok(UsuarioMapper.toDto(user));  // Instrução de retorno - Status 200 Ok
+      //return ResponseEntity.ok(UsuarioMapper.toDto(user));  // Instrução de retorno - Status 200 Ok
         return ResponseEntity.noContent().build();              // Instrução de retorno - Status 204 No Content
     }   
 
