@@ -8,7 +8,7 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import com.parking.proj_parking_api.jwt.JwtToken;
 import com.parking.proj_parking_api.web.dto.UsuarioLoginDto;
 
-public class JwtAuthentication {
+public class JwtAuthentication {    // Preparando a operação de autenticação para a destravar os testes
 
     public static Consumer<HttpHeaders> getHeaderAuthorization(WebTestClient client, String username, String password) {
         String token = client
