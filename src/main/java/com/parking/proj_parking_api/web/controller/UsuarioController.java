@@ -115,7 +115,9 @@ public class UsuarioController {
                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioResponseDto.class))))              
         }
     )
-    @GetMapping            // Listar todos os usuário.
+    @GetMapping            // Listar todos os usuários.
+    @PreAuthorize("hasRole('ADMIN')") 
+    //Permissão de acesso do perfil Admin para listar todos os usuarios.
     public ResponseEntity<List<UsuarioResponseDto>> getALL () {
         List<Usuario> users = usuarioService.buscarTodos();
         return ResponseEntity.ok(UsuarioMapper.toListDto(users));
