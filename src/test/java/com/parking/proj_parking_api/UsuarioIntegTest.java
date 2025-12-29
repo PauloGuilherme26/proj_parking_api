@@ -29,7 +29,6 @@ public class UsuarioIntegTest {
                     .post()
                     .uri("/api/v1/usuarios")
                     .contentType(MediaType.APPLICATION_JSON)
-                    
                     .bodyValue(new UsuarioCreateDto("tody@email.com", "123456"))
                     
                     .exchange()     //A partir do "exchange()" é o que se espera após a requisição.
@@ -205,7 +204,7 @@ public class UsuarioIntegTest {
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(404);
     }
 
-     @Test
+    @Test
     public void buscarUsuario_ComUsuarioClienteBuscandoOutroCliente_RetornarErrorMessageComStatus403() {
         ErrorMessage responseBody = testClient  
                     .get()
@@ -273,7 +272,7 @@ public class UsuarioIntegTest {
     }
 
     @Test
-    public void editarSenha_ComCamposInvalidos_RetornarErrorMessageComStatus422() {
+    public void editarSenha_ComCamposFormatoInvalidos_RetornarErrorMessageComStatus422() {
         ErrorMessage responseBody = testClient  
                     .patch()
                     .uri("/api/v1/usuarios/100")
@@ -346,8 +345,7 @@ public class UsuarioIntegTest {
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(400);
-
-        }
+    }
 
     @Test
     public void buscarTodosUsuarios_SemQualquerParametro_RetornarListaUsuarioComStatus200() {
@@ -357,11 +355,26 @@ public class UsuarioIntegTest {
                     .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .exchange()
                     .expectStatus().isOk()
-                    .expectBodyList(UsuarioResponseDto.class)
+                    .expectBodyList(UsuarioResponseDto.class)   //expectBodyList
                     .returnResult().getResponseBody();
 
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();                                           
-        org.assertj.core.api.Assertions.assertThat(responseBody.size()).isEqualTo(3);                       
-                       
+        org.assertj.core.api.Assertions.assertThat(responseBody.size()).isEqualTo(3);   //Quantidade de usuarios da lista                     
     }
+
+    @Test
+    public void buscarTodosUsuarios_ComUsuarioSemPermisao_RetornarErroMessageComStatus403() {
+        ErrorMessage responseBody = testClient  
+                    .get()
+                    .uri("/api/v1/usuarios")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com", "123456"))
+                    .exchange()
+                    .expectStatus().isForbidden()
+                    .expectBody(ErrorMessage.class)             //expectBody
+                    .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();                                           
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);                       
+    }
+
 }
