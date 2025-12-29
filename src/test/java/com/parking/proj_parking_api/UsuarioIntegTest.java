@@ -14,7 +14,6 @@ import com.parking.proj_parking_api.web.dto.UsuarioResponseDto;
 import com.parking.proj_parking_api.web.dto.UsuarioSenhaDto;
 import com.parking.proj_parking_api.web.exception.ErrorMessage;
 
-
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @Sql(scripts = "/sql/usuarios/usuarios-insert.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
 @Sql(scripts = "/sql/usuarios/usuarios-delete.sql", executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
@@ -278,6 +277,7 @@ public class UsuarioIntegTest {
         ErrorMessage responseBody = testClient  
                     .patch()
                     .uri("/api/v1/usuarios/100")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new UsuarioSenhaDto("", "", ""))
                     .exchange()
@@ -291,6 +291,7 @@ public class UsuarioIntegTest {
         responseBody = testClient  
                     .patch()
                     .uri("/api/v1/usuarios/100")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new UsuarioSenhaDto("123", "123", "123"))
                     .exchange()
@@ -304,6 +305,7 @@ public class UsuarioIntegTest {
         responseBody = testClient  
                     .patch()
                     .uri("/api/v1/usuarios/100")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new UsuarioSenhaDto("12345678", "12345678", "12345678"))
                     .exchange()
@@ -320,6 +322,7 @@ public class UsuarioIntegTest {
         ErrorMessage responseBody = testClient  
                     .patch()
                     .uri("/api/v1/usuarios/100")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new UsuarioSenhaDto("123456", "123456", "000000"))
                     .exchange()
@@ -333,6 +336,7 @@ public class UsuarioIntegTest {
         responseBody = testClient  
                     .patch()
                     .uri("/api/v1/usuarios/100")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .contentType(MediaType.APPLICATION_JSON)
                     .bodyValue(new UsuarioSenhaDto("000000", "123456", "123456"))
                     .exchange()
@@ -350,6 +354,7 @@ public class UsuarioIntegTest {
         List<UsuarioResponseDto> responseBody = testClient  
                     .get()
                     .uri("/api/v1/usuarios")
+                    .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com", "123456"))
                     .exchange()
                     .expectStatus().isOk()
                     .expectBodyList(UsuarioResponseDto.class)
