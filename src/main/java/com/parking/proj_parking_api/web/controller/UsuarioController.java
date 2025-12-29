@@ -78,13 +78,10 @@ public class UsuarioController {
     @Operation(summary = "Atualização de senha.", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN/CLIENTE",
         security = @SecurityRequirement(name = "security"), // Inserção da opção de token na documentação.
         responses = {
-            @ApiResponse (responseCode = "204", description = "Senha atualizada com sucesso!",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+            @ApiResponse (responseCode = "204", description = "Senha atualizada com sucesso!"),
             @ApiResponse (responseCode = "400", description = "Senha não confere!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "403", description = "Usuário sem permissão para acessar esse recurso!",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-            @ApiResponse (responseCode = "404", description = "Recurso não encontrado!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "422", description = "Campos inválidos ou mal formatados!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))    
@@ -106,7 +103,7 @@ public class UsuarioController {
                                                             //@PathVariable - Torna o "Id" um valor variável.
   //public ResponseEntity <UsuarioResponseDto> updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
     public ResponseEntity      <Void>          updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
-            Usuario user = usuarioService.editarSenha (
+            usuarioService.editarSenha (
                 id, 
                 dto.getSenhaAtual(),
                 dto.getNovaSenha(),             //Existem duas opções para o retorno: Status 200 ou Status 204(sem reorno)
