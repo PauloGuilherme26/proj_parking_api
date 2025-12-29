@@ -18,7 +18,7 @@ public class JwtAuthentication {    // Preparando a operação de autenticação
                 .exchange()
                 .expectStatus().isOk()
                 .expectBody(JwtToken.class)
-                .returnResult().getResponseBody(). getToken();
+                .returnResult().getResponseBody().getToken();
         return Headers -> Headers.add(HttpHeaders.AUTHORIZATION, "Bearer " + token);
 
     }
