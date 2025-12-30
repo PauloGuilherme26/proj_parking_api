@@ -23,9 +23,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Usuario implements Serializable {
+
     @Id                     //@Id - Cria um Id automático toda vez que criar uma tabela.
     @GeneratedValue(strategy = GenerationType.IDENTITY) //@GeneratedValue() -  Cria a estratégia de como será o Id.
-    
     @Column(name = "id")
     private Long id;
     
