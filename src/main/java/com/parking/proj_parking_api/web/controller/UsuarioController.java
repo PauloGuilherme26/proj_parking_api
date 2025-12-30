@@ -13,6 +13,7 @@ import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -54,27 +56,32 @@ public class UsuarioController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UsuarioMapper.toDto(user));
     }                                               //@Valid - Deve ser validado!
 
-    @Operation(summary = "Recuperar um usuário pelo Id.", description = "Recuperar um usuário pelo Id.",
+    @Operation(summary = "Recuperar um usuário pelo Id.", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN/CLIENTE",
+        security = @SecurityRequirement(name = "security"), // Inserção da opção de token na documentação.
         responses = {
             @ApiResponse (responseCode = "200", description = "Recurso recuperado com sucesso!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+            @ApiResponse (responseCode = "403", description = "Usuário sem permissão para acessar esse recurso!",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "404", description = "Recurso não encontrado!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         }
     )
     @GetMapping("/{id}")    // Buscar usuário pelo Id.
+    @PreAuthorize("hasRole('ADMIN') OR ( hasRole('CLIENTE') AND #id == authentication.principal.id)") 
+    //Permissão de acesso do perfil Admin  OU  Permissão de acesso do perfil Cliente E somente dados dele próprio 
     public ResponseEntity<UsuarioResponseDto> getById (@PathVariable long id) {
         Usuario user = usuarioService.buscarPorId(id);
         return ResponseEntity.ok(UsuarioMapper.toDto(user));
     }   
 
-    @Operation(summary = "Atualização de senha.", description = "Atualização de senha.",
+    @Operation(summary = "Atualização de senha.", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN/CLIENTE",
+        security = @SecurityRequirement(name = "security"), // Inserção da opção de token na documentação.
         responses = {
-            @ApiResponse (responseCode = "204", description = "Senha atualizada com sucesso!",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = Void.class))),
+            @ApiResponse (responseCode = "204", description = "Senha atualizada com sucesso!"),
             @ApiResponse (responseCode = "400", description = "Senha não confere!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-            @ApiResponse (responseCode = "404", description = "Recurso não encontrado!",
+            @ApiResponse (responseCode = "403", description = "Usuário sem permissão para acessar esse recurso!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "422", description = "Campos inválidos ou mal formatados!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))    
@@ -90,26 +97,34 @@ public class UsuarioController {
             //novaSenha
             //confirmaSenha
 
-    @PatchMapping("/{id}")  // Alteração de Senha do usuário.   //@PathVariable - Torna o "Id" um valor variável.
-    //public ResponseEntity <UsuarioResponseDto> updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
-    public ResponseEntity      <Void>        updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
-            Usuario user = usuarioService.editarSenha (
+    @PatchMapping("/{id}")  // Alteração de Senha do usuário.   
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENTE') AND (#id == authentication.principal.id)")
+    //Permissão de acesso do perfil Admin ou Cliente para alterar apenas sua própria senha.
+                                                            //@PathVariable - Torna o "Id" um valor variável.
+  //public ResponseEntity <UsuarioResponseDto> updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
+    public ResponseEntity      <Void>          updatePassord (@PathVariable long id, @Valid @RequestBody UsuarioSenhaDto dto) {
+            usuarioService.editarSenha (
                 id, 
                 dto.getSenhaAtual(),
                 dto.getNovaSenha(),             //Existem duas opções para o retorno: Status 200 ou Status 204(sem reorno)
                 dto.getConfirmaSenha());
 
-        //return ResponseEntity.ok(UsuarioMapper.toDto(user));  // Instrução de retorno - Status 200 Ok
+      //return ResponseEntity.ok(UsuarioMapper.toDto(user));  // Instrução de retorno - Status 200 Ok
         return ResponseEntity.noContent().build();              // Instrução de retorno - Status 204 No Content
     }   
 
-    @Operation(summary = "Listagem de todos os usuários.", description = "Listagem de todos os usuários.",
+    @Operation(summary = "Listagem de todos os usuários cadastrados.", description = "Requisição exige um Bearer Token. Acesso restrito a ADMIN",
+        security = @SecurityRequirement(name = "security"), // Inserção da opção de token na documentação.
         responses = {
             @ApiResponse (responseCode = "200", description = "Listagem gerada com sucesso!",
-                content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioResponseDto.class))))              
+                content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioResponseDto.class)))),
+            @ApiResponse (responseCode = "403", description = "Usuário sem permissão para acessar esse recurso!",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))              
         }
     )
-    @GetMapping            // Listar todos os usuário.
+    @GetMapping            // Listar todos os usuários.
+    @PreAuthorize("hasRole('ADMIN')") 
+    //Permissão de acesso do perfil Admin para listar todos os usuarios.
     public ResponseEntity<List<UsuarioResponseDto>> getALL () {
         List<Usuario> users = usuarioService.buscarTodos();
         return ResponseEntity.ok(UsuarioMapper.toListDto(users));

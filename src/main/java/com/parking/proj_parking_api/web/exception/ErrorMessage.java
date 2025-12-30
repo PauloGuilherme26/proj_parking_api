@@ -22,6 +22,7 @@ private String method;
 private int status;
 private String statusText;
 private String message;
+
 @JsonInclude(JsonInclude.Include.NON_NULL)
 private Map<String, String> errors; // chave = campo e valor = message
 
