@@ -37,6 +37,7 @@ public class Cliente implements Serializable {
     @OneToOne
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;
+    
 
     //INSTRUÇÕES DE AUDITORIA
     @CreatedDate
@@ -54,6 +55,7 @@ public class Cliente implements Serializable {
     @LastModifiedBy
     @Column(name = "modificado_por")
     private String modificadoPor;
+
 
     @Override
     public int hashCode() {
