@@ -3,9 +3,9 @@ package com.parking.proj_parking_api.web.dto;
 import org.hibernate.validator.constraints.br.CPF;
 
 import jakarta.validation.constraints.*;
+import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
