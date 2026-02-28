@@ -12,8 +12,8 @@ import lombok.Setter;
 
 public class ClienteResponseDto {
 
-private long id;
-private String name;
+private Long id;
+private String nome;
 private String cpf;
 
 

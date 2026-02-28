@@ -5,7 +5,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import com.parking.proj_parking_api.entity.Cliente;
 import com.parking.proj_parking_api.exception.CpfUniqueViolationException;
+import com.parking.proj_parking_api.exception.EntityNotFoundException;
 import com.parking.proj_parking_api.repository.ClienteRepository;
+import java.util.List;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -20,10 +23,22 @@ public class ClienteService {
             return clienteRepository.save(cliente);
         } catch (DataIntegrityViolationException ex) {
             throw new CpfUniqueViolationException(
-                String.format("CPF '%S' não pode ser cadastrado, já existe no sistema", cliente.getCpf())
+                    String.format("CPF '%S' não pode ser cadastrado, já existe no sistema", cliente.getCpf())
             );
         }
 
+    }
+
+    @Transactional(readOnly = true)
+    public Cliente buscarPorId(Long id) {
+        return clienteRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Cliente id=%s não encontrado no sistema", id))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<Cliente> buscarTodos() {
+        return clienteRepository.findAll();
     }
 
 

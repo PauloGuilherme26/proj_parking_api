@@ -25,11 +25,10 @@ public class Cliente implements Serializable {
 
     @Id                     //@Id - Cria um Id automático toda vez que criar uma tabela.
     @GeneratedValue(strategy = GenerationType.IDENTITY) //@GeneratedValue() -  Cria a estratégia de como será o Id.
-    @Column(name = "id")    // Atenção!!!
     private Long id;
     
-    @Column(name = "name", nullable = false, length = 100)
-    private String name;   
+    @Column(name = "nome", nullable = false, length = 100)
+    private String nome;   
 
     @Column(name = "cpf", nullable = false, unique = true, length = 11)    
     private String cpf;
