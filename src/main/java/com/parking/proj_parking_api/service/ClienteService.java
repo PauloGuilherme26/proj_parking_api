@@ -9,6 +9,8 @@ import com.parking.proj_parking_api.entity.Cliente;
 import com.parking.proj_parking_api.exception.CpfUniqueViolationException;
 import com.parking.proj_parking_api.exception.EntityNotFoundException;
 import com.parking.proj_parking_api.repository.ClienteRepository;
+import com.parking.proj_parking_api.repository.projection.ClienteProjection;
+
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -37,8 +39,8 @@ public class ClienteService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Cliente> buscarTodos(Pageable pageable) {
-        return clienteRepository.findAll(pageable);
+    public Page<ClienteProjection> buscarTodos(Pageable pageable) {
+        return clienteRepository.findAllPageable(pageable);
     }
 
 

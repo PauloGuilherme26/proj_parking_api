@@ -14,12 +14,15 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.parking.proj_parking_api.entity.Cliente;
 import com.parking.proj_parking_api.jwt.JwtUserDetails;
+import com.parking.proj_parking_api.repository.projection.ClienteProjection;
 import com.parking.proj_parking_api.service.ClienteService;
 import com.parking.proj_parking_api.service.UsuarioService;
 import com.parking.proj_parking_api.web.dto.ClienteCreateDto;
 import com.parking.proj_parking_api.web.dto.ClienteResponseDto;
+import com.parking.proj_parking_api.web.dto.PageableDto;
 import com.parking.proj_parking_api.web.dto.UsuarioResponseDto;
 import com.parking.proj_parking_api.web.dto.mapper.ClienteMapper;
+import com.parking.proj_parking_api.web.dto.mapper.PageAbleMapper;
 import com.parking.proj_parking_api.web.exception.ErrorMessage;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -85,9 +88,9 @@ public class ClienteController {
 
     @GetMapping             // Listar todos os clientes.
     @PreAuthorize("hasRole('ADMIN')")     //Permissão de acesso do perfil Admin  
-    public ResponseEntity<Page<Cliente>> getAll (Pageable pageable) {
-        Page<Cliente> clientes = clienteService.buscarTodos(pageable);
-        return ResponseEntity.ok(clientes);
+    public ResponseEntity<PageableDto> getAll (Pageable pageable) {
+        Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
+        return ResponseEntity.ok(PageAbleMapper.toDto(clientes));
     }   
 
 }
