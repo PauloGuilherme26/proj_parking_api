@@ -106,10 +106,10 @@ public class UsuarioController {
             usuarioService.editarSenha (
                 id, 
                 dto.getSenhaAtual(),
-                dto.getNovaSenha(),             //Existem duas opções para o retorno: Status 200 ou Status 204(sem reorno)
+                dto.getNovaSenha(),             //Existem duas opções para o retorno: Status 200 ou Status 204(sem retorno)
                 dto.getConfirmaSenha());
 
-      //return ResponseEntity.ok(UsuarioMapper.toDto(user));  // Instrução de retorno - Status 200 Ok
+      //return ResponseEntity.ok(UsuarioMapper.toDto(user));    // Instrução de retorno - Status 200 Ok
         return ResponseEntity.noContent().build();              // Instrução de retorno - Status 204 No Content
     }   
 

@@ -1,0 +1,45 @@
+package com.parking.proj_parking_api.service;
+
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.parking.proj_parking_api.entity.Cliente;
+import com.parking.proj_parking_api.exception.CpfUniqueViolationException;
+import com.parking.proj_parking_api.exception.EntityNotFoundException;
+import com.parking.proj_parking_api.repository.ClienteRepository;
+import lombok.RequiredArgsConstructor;
+
+@RequiredArgsConstructor
+@Service
+public class ClienteService {
+    
+    private final ClienteRepository clienteRepository;  //Injeção do repositório a partir de um Atributo/variável
+    
+    @Transactional
+    public Cliente salvar (Cliente cliente) {
+        try {
+            return clienteRepository.save(cliente);
+        } catch (DataIntegrityViolationException ex) {
+            throw new CpfUniqueViolationException(
+                    String.format("CPF '%S' não pode ser cadastrado, já existe no sistema", cliente.getCpf())
+            );
+        }
+
+    }
+
+    @Transactional(readOnly = true)
+    public Cliente buscarPorId(Long id) {
+        return clienteRepository.findById(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Cliente id=%s não encontrado no sistema", id))
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public Page<Cliente> buscarTodos(Pageable pageable) {
+        return clienteRepository.findAll(pageable);
+    }
+
+
+}

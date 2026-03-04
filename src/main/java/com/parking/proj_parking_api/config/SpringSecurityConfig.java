@@ -38,7 +38,7 @@ public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
             .httpBasic(basic -> basic.disable())
             .authorizeHttpRequests(auth -> auth
                                             .requestMatchers(HttpMethod.POST, "api/v1/usuarios").permitAll()
-                                            .requestMatchers(HttpMethod.POST, "api/v1/auth").permitAll()
+                                            .requestMatchers(HttpMethod.POST, "api/v1/auth").permitAll()                                                                                         
                                             .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                                             .anyRequest().authenticated() )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
