@@ -15,12 +15,12 @@ public class PageableDto {
 
     private boolean last;
 
-    @JsonProperty("current page")   // muda o nome 'number' para 'current page'.
+    @JsonProperty("page")   // muda o nome 'number' para 'page'.
     private int number;
 
     private int size;
 
-     @JsonProperty("pageElements")  // muda o nome 'numberOfElements' para 'pageElements'.
+    @JsonProperty("pageElements")  // muda o nome 'numberOfElements' para 'pageElements'.
     private int numberOfElements;
     
     private int totalPages;
