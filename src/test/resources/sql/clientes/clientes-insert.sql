@@ -10,5 +10,5 @@ values
 insert into clientes
 (id, nome, cpf, id_usuario)
 values
-(10, 'Bianca Silva', '58381645069', '101'),
-(20, 'Roberto Gomes', '89471349028', '102');
+(10, 'Bianca Silva', '58381645069', '102'),
+(20, 'Roberto Gomes', '89471349028', '103');
