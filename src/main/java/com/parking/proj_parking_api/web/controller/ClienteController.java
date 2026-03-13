@@ -123,15 +123,26 @@ public class ClienteController {
             )              
         } )
 
-    @GetMapping             // Listar todos os clientes.
+    @GetMapping                 // Listar todos os clientes.
     @PreAuthorize("hasRole('ADMIN')")     //Permissão de acesso do perfil Admin  
     public ResponseEntity<PageableDto> getAll (@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
         Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
         return ResponseEntity.ok(PageAbleMapper.toDto(clientes));
     }   
 
-    @GetMapping("/detalhes")            
-    @PreAuthorize("hasRole('CLIENTE')")       
+    @Operation(summary = "Recuperar dados do cliente autenticado.", 
+           description = "Requisição exige uso de um bearer token. Acesso restrito a Role='CLIENTE'",
+              security = @SecurityRequirement(name = "security"), // Inserção da opção de token na documentação.
+        responses = {
+            @ApiResponse (responseCode = "200", description = "Recurso localizado com sucesso",
+                content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = UsuarioResponseDto.class))
+            ),            
+            @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
+                content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+        } )
+
+    @GetMapping("/detalhes")    // Listar detalhes do próprio cliente.            
+    @PreAuthorize("hasRole('CLIENTE')")   //Permissão de acesso do perfil Cliente    
     public ResponseEntity<ClienteResponseDto> getDetalhes (@AuthenticationPrincipal JwtUserDetails userDetails) {
         Cliente cliente = clienteService.buscarPorUsuarioId(userDetails.getId());
         return ResponseEntity.ok(ClienteMapper.toDto(cliente));
