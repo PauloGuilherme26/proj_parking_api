@@ -16,5 +16,11 @@ private Long Id;
 @Column (name = "codigo", nullable = false, unique = true, length = 4)
 private String codigo;
 
+@Enumerated (EnumType.STRING)
+private Statusvaga status;
+
+private enum Statusvaga {
+    LIVRE, OCUPADA
+}
 
 }
