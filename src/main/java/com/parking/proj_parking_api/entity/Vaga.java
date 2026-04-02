@@ -2,7 +2,6 @@ package com.parking.proj_parking_api.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-
 import org.springframework.data.annotation.CreatedBy;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedBy;
