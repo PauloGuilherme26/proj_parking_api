@@ -8,7 +8,7 @@ import lombok.*;
 @AllArgsConstructor
 public class VagaResponseDto {
 
-    private Long Id;
+    private Long id;
 
     private String codigo;
 

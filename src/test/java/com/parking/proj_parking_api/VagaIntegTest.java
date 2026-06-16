@@ -140,7 +140,6 @@ public class VagaIntegTest {
                 .jsonPath("method").isEqualTo("POST")
                 .jsonPath("path").isEqualTo("/api/v1/vagas");
     }
-
 }
 
 //Aula 100

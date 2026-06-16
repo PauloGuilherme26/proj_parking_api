@@ -18,5 +18,4 @@ public class VagaMapper {
     public static VagaResponseDto toDto (Vaga vaga) {
         return new ModelMapper().map(vaga, VagaResponseDto.class);
     }
-
 }

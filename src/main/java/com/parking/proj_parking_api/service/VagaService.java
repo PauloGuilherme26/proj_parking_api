@@ -7,8 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.parking.proj_parking_api.entity.Vaga;
 import com.parking.proj_parking_api.exception.CodigoUniqueViolationException;
 import com.parking.proj_parking_api.repository.VagaRepository;
-
-import jakarta.persistence.EntityNotFoundException;
+import com.parking.proj_parking_api.exception.EntityNotFoundException;
 import lombok.*;
 
 @RequiredArgsConstructor
