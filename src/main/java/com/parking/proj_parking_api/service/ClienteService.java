@@ -28,7 +28,6 @@ public class ClienteService {
                     String.format("CPF '%S' não pode ser cadastrado, já existe no sistema", cliente.getCpf())
             );
         }
-
     }
 
     @Transactional(readOnly = true)

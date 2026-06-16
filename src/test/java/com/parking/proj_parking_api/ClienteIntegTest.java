@@ -270,8 +270,6 @@ public class ClienteIntegTest {
         
         //Teste de confirmação se a requisição esta retornando o que se espera.
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();   
-        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);
-        
+        org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(403);        
     }
-
 } 
