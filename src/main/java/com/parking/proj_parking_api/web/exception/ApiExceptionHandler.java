@@ -8,6 +8,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import com.parking.proj_parking_api.exception.UsernameUniqueViolationException;
+import com.parking.proj_parking_api.exception.CodigoUniqueViolationException;
 import com.parking.proj_parking_api.exception.CpfUniqueViolationException;
 import com.parking.proj_parking_api.exception.EntityNotFoundException;
 import com.parking.proj_parking_api.exception.PasswordInvalidException;
@@ -42,7 +43,7 @@ public class ApiExceptionHandler {
             .body(new ErrorMessage(request, HttpStatus.UNPROCESSABLE_ENTITY, "Campo(s) Inválido(s)", result));
     }
 
-    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class})   // Erro de usuário já cadastrado!
+    @ExceptionHandler({UsernameUniqueViolationException.class, CpfUniqueViolationException.class, CodigoUniqueViolationException.class})   // Erro de usuário já cadastrado!
     public ResponseEntity <ErrorMessage> uniqueViolationException ( RuntimeException ex, 
                                                                     HttpServletRequest request) {
         log.error("Api Error - ", ex);

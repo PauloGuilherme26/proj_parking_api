@@ -21,14 +21,14 @@ public class Vaga implements Serializable {
 
     @Id
     @GeneratedValue (strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @Column (name = "codigo", nullable = false, unique = true, length = 4)
     private String codigo;
 
     @Column (name = "status", nullable = false)
     @Enumerated (EnumType.STRING)
-    private Statusvaga status;
+    private StatusVaga status;
 
     //INSTRUÇÕES DE AUDITORIA
     @CreatedDate
@@ -47,7 +47,7 @@ public class Vaga implements Serializable {
     @Column(name = "modificado_por")
     private String modificadoPor;
 
-    private enum Statusvaga {
+    private enum StatusVaga {
         LIVRE, OCUPADA
     }
 
@@ -55,7 +55,7 @@ public class Vaga implements Serializable {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((Id == null) ? 0 : Id.hashCode());
+        result = prime * result + ((id == null) ? 0 : id.hashCode());
         return result;
     }
 
@@ -68,12 +68,12 @@ public class Vaga implements Serializable {
         if (getClass() != obj.getClass())
             return false;
         Vaga other = (Vaga) obj;
-        if (Id == null) {
-            if (other.Id != null)
+        if (id == null) {
+            if (other.id != null)
                 return false;
-        } else if (!Id.equals(other.Id))
+        } else if (!id.equals(other.id))
             return false;
         return true;
     }
-    
+        
 }

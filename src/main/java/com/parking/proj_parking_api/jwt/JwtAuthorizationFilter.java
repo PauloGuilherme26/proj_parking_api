@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtAuthorizationFilter extends OncePerRequestFilter{
     
     @Autowired
-    private JwtUserDetailsService detailsService;
+    private JwtUserDetailsService detailsService;           
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
