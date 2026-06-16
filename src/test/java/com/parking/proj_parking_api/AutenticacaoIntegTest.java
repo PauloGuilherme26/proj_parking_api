@@ -129,5 +129,4 @@ public class AutenticacaoIntegTest {
         org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();
         org.assertj.core.api.Assertions.assertThat(responseBody.getStatus()).isEqualTo(422);    
     }
-
 }
