@@ -52,6 +52,7 @@ public class ClienteVaga {
     @Column(name="desconto", columnDefinition = "decimal(7,2)")
     private BigDecimal desconto;
 
+    //RELACIONAMENTOS
     @ManyToOne
     @JoinColumn(name="id_cliente", nullable = false)
     private Cliente cliente;
