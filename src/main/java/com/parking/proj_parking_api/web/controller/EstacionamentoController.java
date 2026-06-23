@@ -16,7 +16,6 @@ import com.parking.proj_parking_api.web.dto.EstacionamentoCreateDto;
 import com.parking.proj_parking_api.web.dto.EstacionamentoResponseDto;
 import com.parking.proj_parking_api.web.dto.mapper.ClienteVagaMapper;
 
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -38,7 +37,5 @@ public class EstacionamentoController {
                 .buildAndExpand(clienteVaga.getRecibo())
                 .toUri();
         return ResponseEntity.created(location).body(responseDto);
-
     }
-
 }

@@ -32,5 +32,4 @@ public class EstacionamentoCreateDto {
     @CPF
     private String clienteCpf;   
 
-
 }
