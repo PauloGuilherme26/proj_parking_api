@@ -26,7 +26,7 @@ public class EstacionamentoController {
 
     private final EstacionamentoService estacionamentoService;
 
-    @PostMapping(path = "/check-in")            // Criar um Checkin.
+    @PostMapping("/check-in")            // Criar um Checkin.
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<EstacionamentoResponseDto> checkin (@RequestBody @Valid EstacionamentoCreateDto dto) {
         ClienteVaga clienteVaga = ClienteVagaMapper.toClienteVaga(dto);
