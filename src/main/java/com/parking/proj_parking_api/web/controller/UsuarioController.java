@@ -50,6 +50,7 @@ public class UsuarioController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         }
     )
+    
     @PostMapping            // Criar um usuário.
     public ResponseEntity<UsuarioResponseDto> create (@Valid @RequestBody UsuarioCreateDto createDto) {
         Usuario user = usuarioService.salvar(UsuarioMapper.toUsuario(createDto));
@@ -67,6 +68,7 @@ public class UsuarioController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         }
     )
+
     @GetMapping("/{id}")    // Buscar usuário pelo Id.
     @PreAuthorize("hasRole('ADMIN') OR ( hasRole('CLIENTE') AND #id == authentication.principal.id)") 
     //Permissão de acesso do perfil Admin  OU  Permissão de acesso do perfil Cliente E somente dados dele próprio 
@@ -122,6 +124,7 @@ public class UsuarioController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))              
         }
     )
+
     @GetMapping            // Listar todos os usuários.
     @PreAuthorize("hasRole('ADMIN')") 
     //Permissão de acesso do perfil Admin para listar todos os usuarios.

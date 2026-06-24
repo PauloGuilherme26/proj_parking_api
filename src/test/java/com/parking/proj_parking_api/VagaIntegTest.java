@@ -142,4 +142,3 @@ public class VagaIntegTest {
     }
 }
 
-// Pronto para iniciar a Aula 102

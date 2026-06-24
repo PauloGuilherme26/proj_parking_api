@@ -63,8 +63,8 @@ public class ClienteController {
         }
     )
 
-    @PostMapping            // Criar um Cliente.
-    @PreAuthorize("hasRole('CLIENTE')")
+    @PostMapping            // Criar um Cliente.    //Só quem pode criar um cliente é o próprio usuário logado.
+    @PreAuthorize("hasRole('CLIENTE')")             //Um único usuário só pode criar um único cliente.
     public ResponseEntity<ClienteResponseDto> create (@RequestBody @Valid ClienteCreateDto dto,
                                                       @AuthenticationPrincipal JwtUserDetails userDetails) {
 
