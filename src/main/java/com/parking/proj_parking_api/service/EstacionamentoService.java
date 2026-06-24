@@ -16,9 +16,9 @@ import lombok.*;
 @Service
 public class EstacionamentoService {
 
-    private ClienteVagaService clienteVagaService;
-    private ClienteService clienteService;
-    private VagaService vagaService;
+    private final ClienteVagaService clienteVagaService;
+    private final ClienteService clienteService;
+    private final VagaService vagaService;
 
     @Transactional
     public ClienteVaga checkIn (ClienteVaga clienteVaga) {
