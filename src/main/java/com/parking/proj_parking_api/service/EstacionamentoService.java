@@ -22,8 +22,8 @@ public class EstacionamentoService {
 
     @Transactional
     public ClienteVaga checkIn (ClienteVaga clienteVaga) {
-        Cliente cliente = clienteService.buscarPorCpf(clienteVaga.getCliente().getCpf()); 
-        clienteVaga.setCliente(cliente);
+        Cliente cliente = clienteService.buscarPorCpf(clienteVaga.getCliente().getCpf());   
+        clienteVaga.setCliente(cliente);        //Só pode estacionar os clientes(CPF) já cadastrados!
 
         Vaga vaga = vagaService.buscarPorVagaLivre(); 
         vaga.setStatus(Vaga.StatusVaga.OCUPADA);
