@@ -27,10 +27,10 @@ public class EstacionamentoResponseDto {
 
     private String recibo;
     
-    @JsonFormat(pattern = "AAAA-MM-DD hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataEntrada;
     
-    @JsonFormat(pattern = "AAAA-MM-DD hh:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dataSaida;
 
     private String vagaCodigo;
