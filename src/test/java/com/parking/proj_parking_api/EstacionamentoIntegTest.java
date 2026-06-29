@@ -208,7 +208,6 @@ public class EstacionamentoIntegTest {
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in/20230313-999999")
                 .jsonPath("method").isEqualTo("GET");     
     }
-
 }                           
 
-                                //Aula 113 (meio da aula)
+                                //Aula 114 (Inicio da aula)
