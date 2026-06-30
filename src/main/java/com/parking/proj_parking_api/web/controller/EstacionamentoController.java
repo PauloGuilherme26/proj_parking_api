@@ -14,13 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.parking.proj_parking_api.entity.ClienteVaga;
+import com.parking.proj_parking_api.repository.projection.ClienteVagaProjection;
 import com.parking.proj_parking_api.service.ClienteVagaService;
 import com.parking.proj_parking_api.service.EstacionamentoService;
 import com.parking.proj_parking_api.web.dto.EstacionamentoCreateDto;
 import com.parking.proj_parking_api.web.dto.EstacionamentoResponseDto;
+import com.parking.proj_parking_api.web.dto.PageableDto;
 import com.parking.proj_parking_api.web.dto.mapper.ClienteVagaMapper;
+import com.parking.proj_parking_api.web.dto.mapper.PageAbleMapper;
 import com.parking.proj_parking_api.web.exception.ErrorMessage;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -31,6 +38,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.headers.Header;
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -118,8 +127,47 @@ public class EstacionamentoController {
         return ResponseEntity.ok(dto);
     }
 
-    
+    @Operation(summary = "Localizar os registros de estacionamentos do cliente pelo CPF.", 
+               description = "LOcalizar os registros de estacionamentos do cliente pelo CPF. " +
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "cpf", description = "Número do cpf referente ao cliente a ser consultado.", 
+                               required = true
+                        ),
+                    @Parameter(in = QUERY, name = "size", description = "Representa a página retornada.",
+                               content = @Content(schema = @Schema(type = "interger", defaultValue = "0"))
+                        ),
+                    @Parameter(in = QUERY, name = "page", description = "Representa o total de elementos por página.",
+                               content = @Content(schema = @Schema(type = "interger", defaultValue = "5"))
+                        ),
+                    @Parameter(in = QUERY, name = "sort", description = "Campo padrão de ordenação 'dataEntrada,asc'.",
+                               array = @ArraySchema(schema = @Schema(type = "string", defaultValue = "dataEntrada,asc")),
+                               hidden = true
+                        ) },
+                        
+            responses = {       
+                    @ApiResponse (responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = PageableDto.class))),
+                    
+                    @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = ErrorMessage.class))),    
+            } )
 
+    @GetMapping("/cpf/{cpf}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity <PageableDto> getAllEstacionamentosPorCpf ( 
+        @PathVariable 
+        String cpf, 
+        @PageableDefault(size = 5, sort = "dataEntrada", direction = Sort.Direction.ASC) 
+        Pageable pageable ) {
+        
+        Page <ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorClienteCpf(cpf, pageable);
+        PageableDto dto = PageAbleMapper.toDto(projection);
+        return ResponseEntity.ok(dto);        
+    }
 }
 
                         

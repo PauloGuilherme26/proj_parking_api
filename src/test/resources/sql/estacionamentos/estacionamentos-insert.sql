@@ -23,6 +23,11 @@ values
 insert into clientes_tem_vagas 
 (numero_recibo, placa, marca, modelo, cor, data_entrada, id_cliente, id_vaga)
 values 
-('20230313-101300', 'FIT-1020', 'FIAT', 'PALIO', 'VERDE',   '2023-03-13 10:15:00', 22, 100),
+('20230313-101300', 'FIT-1020', 'FIAT', 'PALIO', 'VERDE',   '2026-03-13 10:15:00', 22, 100),    /* '2023-03-13 10:15:00' */
 ('20230314-101400', 'SIE-1020', 'FIAT', 'SIENA', 'BRANCO',  '2023-03-14 10:15:00', 21, 200),
 ('20230315-101500', 'FIT-1020', 'FIAT', 'PALIO', 'VERDE',   '2023-03-14 10:15:00', 22, 300);
+
+/* Atenão a data de entrada/recibo! */ 
+/* Data do curso é de 2023 e até data atual muito longa e impactar no cálculo do valor do estacionamento */
+/* Intervalo de tempo longo acarretada aumento na quantidade de dígitos acima de 7 => Erro 401 UNAUTHORIZED */
+/* ClienteVaga: "decimal(7,2)"  -  7 dígitos com duas casas decimais */
