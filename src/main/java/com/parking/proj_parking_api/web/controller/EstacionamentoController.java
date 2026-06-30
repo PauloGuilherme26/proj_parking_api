@@ -38,6 +38,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import io.swagger.v3.oas.annotations.headers.Header;
+import static io.swagger.v3.oas.annotations.enums.ParameterIn.QUERY;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 
@@ -124,6 +126,35 @@ public class EstacionamentoController {
         EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
         return ResponseEntity.ok(dto);
     }
+
+    @Operation(summary = "Localizar os registros de estacionamentos do cliente pelo CPF.", 
+               description = "LOcalizar os registros de estacionamentos do cliente pelo CPF. " +
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "cpf", description = "Número do cpf referente ao cliente a ser consultado.", 
+                               required = true
+                        ),
+                    @Parameter(in = QUERY, name = "size", description = "Representa a página retornada.",
+                               content = @Content(schema = @Schema(type = "interger", defaultValue = "0"))
+                        ),
+                    @Parameter(in = QUERY, name = "page", description = "Representa o total de elementos por página.",
+                               content = @Content(schema = @Schema(type = "interger", defaultValue = "5"))
+                        ),
+                    @Parameter(in = QUERY, name = "sort", description = "Campo padrão de ordenação 'dataEntrada,asc'.",
+                               array = @ArraySchema(schema = @Schema(type = "string", defaultValue = "dataEntrada,asc")),
+                               hidden = true
+                        ) },
+                        
+            responses = {       
+                    @ApiResponse (responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = PageableDto.class))),
+                    
+                    @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = ErrorMessage.class))),    
+            } )
 
     @GetMapping("/cpf/{cpf}")
     @PreAuthorize("hasRole('ADMIN')")

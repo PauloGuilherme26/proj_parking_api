@@ -169,7 +169,7 @@ public class EstacionamentoIntegTest {
                 .jsonPath("cor").isEqualTo("VERDE")
                 .jsonPath("clienteCpf").isEqualTo("98401203015")
                 .jsonPath("recibo").isEqualTo("20230313-101300")
-                .jsonPath("dataEntrada").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("dataEntrada").isEqualTo("2026-03-13 10:15:00")
                 .jsonPath("vagaCodigo").isEqualTo("A-01");               
     }
 
@@ -190,7 +190,7 @@ public class EstacionamentoIntegTest {
                 .jsonPath("cor").isEqualTo("VERDE")
                 .jsonPath("clienteCpf").isEqualTo("98401203015")
                 .jsonPath("recibo").isEqualTo("20230313-101300")
-                .jsonPath("dataEntrada").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("dataEntrada").isEqualTo("2026-03-13 10:15:00")
                 .jsonPath("vagaCodigo").isEqualTo("A-01");               
     }
 
@@ -212,10 +212,10 @@ public class EstacionamentoIntegTest {
 
     @Test
     public void criarCheckOut_ComReciboExistente_RetornarSucesso_ComStatus200() {
-                        
-        testClient
-                .put()
-                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-101300")
+                                                                                        
+        testClient                                                                      //Atenão a data de entrada do recibo!!
+                .put()                                                                  
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-101300")      
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com.br", "123456"))
                                                              
                 .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
@@ -225,7 +225,7 @@ public class EstacionamentoIntegTest {
                 .jsonPath("marca").isEqualTo("FIAT")
                 .jsonPath("modelo").isEqualTo("PALIO")
                 .jsonPath("cor").isEqualTo("VERDE")
-                .jsonPath("dataEntrada").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("dataEntrada").isEqualTo("2026-03-13 10:15:00")
                 .jsonPath("clienteCpf").isEqualTo("98401203015")
                 .jsonPath("vagaCodigo").isEqualTo("A-01")
                 .jsonPath("recibo").isEqualTo("20230313-101300")               
