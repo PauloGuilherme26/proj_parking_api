@@ -4,13 +4,17 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.parking.proj_parking_api.entity.ClienteVaga;
+import com.parking.proj_parking_api.service.ClienteVagaService;
 import com.parking.proj_parking_api.service.EstacionamentoService;
 import com.parking.proj_parking_api.web.dto.EstacionamentoCreateDto;
 import com.parking.proj_parking_api.web.dto.EstacionamentoResponseDto;
@@ -19,6 +23,8 @@ import com.parking.proj_parking_api.web.exception.ErrorMessage;
 
 import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -35,6 +41,7 @@ import lombok.RequiredArgsConstructor;
 public class EstacionamentoController {
 
     private final EstacionamentoService estacionamentoService;
+    private final ClienteVagaService clienteVagaService;
 
     @Operation(summary = "Operação de check-in.", description = "Recurso para dar entrada de um veículo no estacionamento. " +
             "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
@@ -72,4 +79,47 @@ public class EstacionamentoController {
                 .toUri();
         return ResponseEntity.created(location).body(responseDto);
     }
+
+    @GetMapping("/check-in/{recibo}")   //Localizar recibo
+    @PreAuthorize("hasAnyRole('ADMIN', 'CLIENTE')")
+    public ResponseEntity <EstacionamentoResponseDto> getByRecibo(@PathVariable String recibo) {
+        ClienteVaga clienteVaga = clienteVagaService.buscarPorRecibo(recibo);
+        EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
+        return ResponseEntity.ok(dto);
+    }    
+    
+    @Operation(summary = "Operação de check-out.", description = "Recurso para dar saída de um veículo do estacionamento. " +
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {
+                    @Parameter(in = ParameterIn.PATH, name = "recibo", description = "Número do recibo gerado pelo check-in")
+            },
+            responses = {       
+                    @ApiResponse (responseCode = "200", description = "Recurso atualizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+
+                    @ApiResponse (responseCode = "404", description = "Causas possíveis: <br/>" + 
+                            "- Número do recibo inexistente; <br/>" +
+                            "- O veículo já passou pelo check-out.",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = ErrorMessage.class))),                   
+
+                    @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = ErrorMessage.class))),    
+            })
+
+    @PutMapping("/check-out/{recibo}")   
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity <EstacionamentoResponseDto> checkout(@PathVariable String recibo) {
+        ClienteVaga clienteVaga = estacionamentoService.checkOut(recibo);
+        EstacionamentoResponseDto dto = ClienteVagaMapper.toDto(clienteVaga);
+        return ResponseEntity.ok(dto);
+    }
+
+    
+
 }
+
+                        
