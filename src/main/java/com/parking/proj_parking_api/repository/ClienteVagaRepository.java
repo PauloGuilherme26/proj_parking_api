@@ -2,9 +2,12 @@ package com.parking.proj_parking_api.repository;
 
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.parking.proj_parking_api.entity.ClienteVaga;
+import com.parking.proj_parking_api.repository.projection.ClienteVagaProjection;
 
 public interface ClienteVagaRepository extends JpaRepository <ClienteVaga, Long> {
 
@@ -12,4 +15,5 @@ public interface ClienteVagaRepository extends JpaRepository <ClienteVaga, Long>
 
     long countByClienteCpfAndDataSaidaIsNotNull(String cpf);
 
+    Page<ClienteVagaProjection> findAllByClienteCpf(String cpf, Pageable pageable);
 }

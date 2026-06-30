@@ -14,13 +14,20 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.parking.proj_parking_api.entity.ClienteVaga;
+import com.parking.proj_parking_api.repository.projection.ClienteVagaProjection;
 import com.parking.proj_parking_api.service.ClienteVagaService;
 import com.parking.proj_parking_api.service.EstacionamentoService;
 import com.parking.proj_parking_api.web.dto.EstacionamentoCreateDto;
 import com.parking.proj_parking_api.web.dto.EstacionamentoResponseDto;
+import com.parking.proj_parking_api.web.dto.PageableDto;
 import com.parking.proj_parking_api.web.dto.mapper.ClienteVagaMapper;
+import com.parking.proj_parking_api.web.dto.mapper.PageAbleMapper;
 import com.parking.proj_parking_api.web.exception.ErrorMessage;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpHeaders;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -118,8 +125,18 @@ public class EstacionamentoController {
         return ResponseEntity.ok(dto);
     }
 
-    
-
+    @GetMapping("/cpf/{cpf}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity <PageableDto> getAllEstacionamentosPorCpf ( 
+        @PathVariable 
+        String cpf, 
+        @PageableDefault(size = 5, sort = "dataEntrada", direction = Sort.Direction.ASC) 
+        Pageable pageable ) {
+        
+        Page <ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorClienteCpf(cpf, pageable);
+        PageableDto dto = PageAbleMapper.toDto(projection);
+        return ResponseEntity.ok(dto);        
+    }
 }
 
                         

@@ -1,12 +1,14 @@
 package com.parking.proj_parking_api.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.parking.proj_parking_api.entity.ClienteVaga;
 import com.parking.proj_parking_api.exception.EntityNotFoundException;
 import com.parking.proj_parking_api.repository.ClienteVagaRepository;
-
+import com.parking.proj_parking_api.repository.projection.ClienteVagaProjection;
 
 import lombok.*;
 
@@ -33,5 +35,10 @@ public class ClienteVagaService {
     @Transactional(readOnly = true)
     public long getTotalDeVezesEstacionamentoCompleto(String cpf) {
         return repository.countByClienteCpfAndDataSaidaIsNotNull(cpf);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<ClienteVagaProjection> buscarTodosPorClienteCpf(String cpf, Pageable pageable) {
+        return repository.findAllByClienteCpf(cpf, pageable);
     }
 }
