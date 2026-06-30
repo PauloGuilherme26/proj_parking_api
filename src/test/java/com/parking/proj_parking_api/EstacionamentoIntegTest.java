@@ -214,7 +214,7 @@ public class EstacionamentoIntegTest {
                         
         testClient
                 .put()
-                .uri("/api/v1/estacionamentos/check-in/{recibo}", "20230313-101300")
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-101300")
                 .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com.br", "123456"))
                                                              
                 .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
