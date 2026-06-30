@@ -4,10 +4,9 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import lombok.*;                                  
 
-//import lombok.*;                                  - Comentado devido inserção de dados dados de calculo de valor estacionamento
-
-//@NoArgsConstructor(access = AccessLevel.PRIVATE)  - Comentado devido inserção de dados dados de calculo de valor estacionamento 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)   
 public class EstacionamentoUtils {
 
     //2023-03-16T15:23:48.616463500  -  LocalDateTime gera
@@ -24,13 +23,11 @@ public class EstacionamentoUtils {
     
     //Inserção de dados de calculo de valor estacionamento:
 
-    private static final double PRIMEIROS_15_MINUTES = 5.00;
-    private static final double PRIMEIROS_60_MINUTES = 9.25;
-    private static final double ADICIONAL_15_MINUTES = 1.75;
-    private static final double DESCONTO_PERCENTUAL = 0.30;
-    
-    private EstacionamentoUtils() {}
-    
+      private static final double PRIMEIROS_15_MINUTES = 5.00;
+      private static final double PRIMEIROS_60_MINUTES = 9.25;
+      private static final double ADICIONAL_15_MINUTES = 1.75;
+      private static final double DESCONTO_PERCENTUAL = 0.30;
+            
     public static BigDecimal calcularCusto(LocalDateTime entrada, LocalDateTime saida) {
         long minutes = entrada.until(saida, ChronoUnit.MINUTES);
         double total = 0.0;
@@ -49,9 +46,7 @@ public class EstacionamentoUtils {
             }
         } 
         return new BigDecimal(total).setScale(2, RoundingMode.HALF_EVEN);
-    }
-
-    //private static final double DESCONTO_PERCENTUAL = 0.30;
+    }   
     
     public static BigDecimal calcularDesconto(BigDecimal custo, long numeroDeVezes) {
         BigDecimal desconto = ((numeroDeVezes > 0) && (numeroDeVezes % 10 == 0))

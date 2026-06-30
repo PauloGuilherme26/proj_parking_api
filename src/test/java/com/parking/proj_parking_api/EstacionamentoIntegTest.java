@@ -208,6 +208,62 @@ public class EstacionamentoIntegTest {
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-in/20230313-999999")
                 .jsonPath("method").isEqualTo("GET");     
     }
+
+    @Test
+    public void criarCheckOut_ComReciboExistente_RetornarSucesso_ComStatus200() {
+                        
+        testClient
+                .put()
+                .uri("/api/v1/estacionamentos/check-in/{recibo}", "20230313-101300")
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com.br", "123456"))
+                                                             
+                .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
+                .expectStatus().isOk()
+                .expectBody()
+                .jsonPath("placa").isEqualTo("FIT-1020")
+                .jsonPath("marca").isEqualTo("FIAT")
+                .jsonPath("modelo").isEqualTo("PALIO")
+                .jsonPath("cor").isEqualTo("VERDE")
+                .jsonPath("dataEntrada").isEqualTo("2023-03-13 10:15:00")
+                .jsonPath("clienteCpf").isEqualTo("98401203015")
+                .jsonPath("vagaCodigo").isEqualTo("A-01")
+                .jsonPath("recibo").isEqualTo("20230313-101300")               
+                .jsonPath("dataSaida").exists()
+                .jsonPath("valor").exists()
+                .jsonPath("desconto").exists();                
+    }                    
+
+    @Test
+    public void criarCheckOut_ComReciboInexistente_RetornarErrorMessageComStatus404() {
+                        
+        testClient  
+                .put()
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-000000")                
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com.br", "123456"))
+                                                             
+                .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
+                .expectStatus().isNotFound()
+                .expectBody()
+                .jsonPath("status").isEqualTo("404")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-out/20230313-000000")
+                .jsonPath("method").isEqualTo("PUT");                
+    }      
+    
+    @Test
+    public void criarCheckOut_ComPerfilCliente_RetornarErrorMessageComStatus403() {
+                        
+        testClient  
+                .put()
+                .uri("/api/v1/estacionamentos/check-out/{recibo}", "20230313-101300")                
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bia@email.com.br", "123456"))
+                                                             
+                .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos/check-out/20230313-101300")
+                .jsonPath("method").isEqualTo("PUT");                
+    }     
 }                           
 
-                                //Aula 114 (Inicio da aula)
+                                
