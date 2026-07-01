@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.parking.proj_parking_api.entity.ClienteVaga;
+import com.parking.proj_parking_api.jwt.JwtUserDetails;
 import com.parking.proj_parking_api.repository.projection.ClienteVagaProjection;
 import com.parking.proj_parking_api.service.ClienteVagaService;
 import com.parking.proj_parking_api.service.EstacionamentoService;
@@ -128,17 +130,17 @@ public class EstacionamentoController {
     }
 
     @Operation(summary = "Localizar os registros de estacionamentos do cliente pelo CPF.", 
-               description = "LOcalizar os registros de estacionamentos do cliente pelo CPF. " +
+               description = "Localizar os registros de estacionamentos do cliente pelo CPF. " +
             "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
             security = @SecurityRequirement(name = "security"),
             parameters = {
                     @Parameter(in = ParameterIn.PATH, name = "cpf", description = "Número do cpf referente ao cliente a ser consultado.", 
                                required = true
                         ),
-                    @Parameter(in = QUERY, name = "size", description = "Representa a página retornada.",
+                    @Parameter(in = QUERY, name = "page", description = "Representa a página retornada.",
                                content = @Content(schema = @Schema(type = "interger", defaultValue = "0"))
                         ),
-                    @Parameter(in = QUERY, name = "page", description = "Representa o total de elementos por página.",
+                    @Parameter(in = QUERY, name = "size", description = "Representa o total de elementos por página.",
                                content = @Content(schema = @Schema(type = "interger", defaultValue = "5"))
                         ),
                     @Parameter(in = QUERY, name = "sort", description = "Campo padrão de ordenação 'dataEntrada,asc'.",
@@ -161,10 +163,53 @@ public class EstacionamentoController {
     public ResponseEntity <PageableDto> getAllEstacionamentosPorCpf ( 
         @PathVariable 
         String cpf, 
+
+        @Parameter(hidden = true)
         @PageableDefault(size = 5, sort = "dataEntrada", direction = Sort.Direction.ASC) 
-        Pageable pageable ) {
-        
+        Pageable pageable ) 
+        {        
         Page <ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorClienteCpf(cpf, pageable);
+        PageableDto dto = PageAbleMapper.toDto(projection);
+        return ResponseEntity.ok(dto);        
+    }
+
+    @Operation(summary = "Localizar os registros de estacionamentos do cliente logado.", 
+               description = "Localizar os registros de estacionamentos do cliente logado. " +
+            "Requisição exige uso de um bearer token. Acesso restrito a Role='ADMIN'",
+            security = @SecurityRequirement(name = "security"),
+            parameters = {                    
+                    @Parameter(in = QUERY, name = "page", description = "Representa a página retornada.",
+                               content = @Content(schema = @Schema(type = "interger", defaultValue = "0"))
+                        ),
+                    @Parameter(in = QUERY, name = "size", description = "Representa o total de elementos por página.",
+                               content = @Content(schema = @Schema(type = "interger", defaultValue = "5"))
+                        ),
+                    @Parameter(in = QUERY, name = "sort", description = "Campo padrão de ordenação 'dataEntrada,asc'.",
+                               array = @ArraySchema(schema = @Schema(type = "string", defaultValue = "dataEntrada,asc")),
+                               hidden = true
+                        ) },
+                        
+            responses = {       
+                    @ApiResponse (responseCode = "200", description = "Recurso localizado com sucesso",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+                    
+                    @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
+                            content = @Content(mediaType = "application/json;charset=UTF-8", 
+                            schema = @Schema(implementation = ErrorMessage.class))),    
+            } )
+
+    @GetMapping
+    @PreAuthorize("hasRole('CLIENTE')")
+    public ResponseEntity <PageableDto> getAllEstacionamentosDoCliente ( 
+        @AuthenticationPrincipal 
+        JwtUserDetails user, 
+
+        @Parameter(hidden = true)
+        @PageableDefault(size = 5, sort = "dataEntrada", direction = Sort.Direction.ASC) 
+        Pageable pageable ) 
+        {        
+        Page <ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorUsuarioId(user.getId(), pageable);
         PageableDto dto = PageAbleMapper.toDto(projection);
         return ResponseEntity.ok(dto);        
     }

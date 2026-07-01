@@ -317,6 +317,58 @@ public class EstacionamentoIntegTest {
                 .jsonPath("path").isEqualTo("/api/v1/estacionamentos/cpf/98401203015")
                 .jsonPath("method").isEqualTo("GET");                
     }
+
+    @Test
+    public void buscarEstacionamentos_DoClienteLogado__RetornarSucesso_ComStatus200() {
+                        
+        PageableDto responseBody = testClient  
+                .get()
+                .uri("/api/v1/estacionamentos?size=1&page=0")                
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@email.com.br", "123456"))
+                                                             
+                .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();   
+        org.assertj.core.api.Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2); 
+        org.assertj.core.api.Assertions.assertThat(responseBody.getNumber()).isEqualTo(0); 
+        org.assertj.core.api.Assertions.assertThat(responseBody.getSize()).isEqualTo(1);
+
+        responseBody = testClient  
+                .get()
+                .uri("/api/v1/estacionamentos?size=1&page=1")                
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "bob@email.com.br", "123456"))
+                                                             
+                .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
+                .expectStatus().isOk()
+                .expectBody(PageableDto.class)
+                .returnResult().getResponseBody();
+
+        org.assertj.core.api.Assertions.assertThat(responseBody).isNotNull();   
+        org.assertj.core.api.Assertions.assertThat(responseBody.getContent().size()).isEqualTo(1);
+        org.assertj.core.api.Assertions.assertThat(responseBody.getTotalPages()).isEqualTo(2); 
+        org.assertj.core.api.Assertions.assertThat(responseBody.getNumber()).isEqualTo(1); 
+        org.assertj.core.api.Assertions.assertThat(responseBody.getSize()).isEqualTo(1);
+    }
+
+    @Test
+    public void buscarEstacionamentos_DoClienteLogado_ComPerfilAdmin_RetornarErrorMessageComStatus403() {
+                        
+        testClient  
+                .get()
+                .uri("/api/v1/estacionamentos")                
+                .headers(JwtAuthentication.getHeaderAuthorization(testClient, "ana@email.com.br", "123456"))
+                                                             
+                .exchange()                             //A partir do "exchange()" é o que se espera após a requisição.
+                .expectStatus().isForbidden()
+                .expectBody()
+                .jsonPath("status").isEqualTo("403")
+                .jsonPath("path").isEqualTo("/api/v1/estacionamentos")
+                .jsonPath("method").isEqualTo("GET");                
+    }
 }                           
 
                                 
