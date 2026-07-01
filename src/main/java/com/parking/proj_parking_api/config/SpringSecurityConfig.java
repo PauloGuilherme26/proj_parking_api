@@ -16,11 +16,14 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
 import com.parking.proj_parking_api.jwt.JwtAuthenticationEntryPoint;
 import com.parking.proj_parking_api.jwt.JwtAuthorizationFilter;
+import com.parking.proj_parking_api.jwt.JwtUserDetailsService;
 
 @EnableMethodSecurity
 @EnableWebMvc
 @Configuration
 public class SpringSecurityConfig {
+
+    private JwtUserDetailsService detailsService;
 
 private static final String[] DOCUMENTATION_OPENAPI = {     //Liberação de acesso da documentação (swagger-ui) para o Spring Security
         "/docs/index.html",
@@ -42,14 +45,15 @@ public SecurityFilterChain filterChain (HttpSecurity http) throws Exception {
                                             .requestMatchers(DOCUMENTATION_OPENAPI).permitAll()
                                             .anyRequest().authenticated() )
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-            .addFilterBefore(jwtAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(jwtAuthorizationFilter(this.detailsService), UsernamePasswordAuthenticationFilter.class)
             .exceptionHandling(ex -> ex.authenticationEntryPoint( new JwtAuthenticationEntryPoint() ) )   
             .build();   
     }
-
+    
 @Bean
-public JwtAuthorizationFilter jwtAuthorizationFilter() {
-    return new JwtAuthorizationFilter();
+public JwtAuthorizationFilter jwtAuthorizationFilter(JwtUserDetailsService detailsService) {
+    this.detailsService = detailsService;
+    return new JwtAuthorizationFilter(detailsService);
 } 
 
 @Bean
