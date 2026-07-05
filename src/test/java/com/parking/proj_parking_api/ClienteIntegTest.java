@@ -189,7 +189,7 @@ public class ClienteIntegTest {
                     .get()
                     .uri("/api/v1/clientes")
                     .headers(JwtAuthentication.getHeaderAuthorization(testClient, "joao@email.com", "123456"))
-                                                                                            //joao é Admin
+                                                                                            //joao é Admin                                                                                            
                     .exchange()                            
                     .expectStatus().isOk()
                     .expectBody(PageableDto.class)
