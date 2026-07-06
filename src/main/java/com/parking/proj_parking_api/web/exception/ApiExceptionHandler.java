@@ -76,4 +76,14 @@ public class ApiExceptionHandler {
             .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
     }
 
+    @ExceptionHandler(Exception.class)                         // Erro que não for nenhum dos anteriores
+    public ResponseEntity <ErrorMessage> internalServerErrorException ( Exception ex, HttpServletRequest request ) {
+        ErrorMessage error = new ErrorMessage(
+            request, HttpStatus.INTERNAL_SERVER_ERROR, HttpStatus.INTERNAL_SERVER_ERROR.getReasonPhrase());
+        log.error("Internal Server Error {} {} ", error, ex.getMessage());
+        return ResponseEntity
+            .status(HttpStatus.INTERNAL_SERVER_ERROR)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(error);
+    }
 }

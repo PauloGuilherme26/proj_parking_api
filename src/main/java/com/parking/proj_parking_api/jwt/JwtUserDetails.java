@@ -1,7 +1,6 @@
 package com.parking.proj_parking_api.jwt;
 
 import com.parking.proj_parking_api.entity.Usuario;
-//import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.userdetails.User;
 
@@ -21,6 +20,4 @@ public class JwtUserDetails extends User {
     public String getRole() {
         return this.Usuario.getRole().name();
     }
-
-
 }

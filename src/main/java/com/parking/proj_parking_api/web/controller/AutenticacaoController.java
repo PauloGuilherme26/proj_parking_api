@@ -15,6 +15,7 @@ import com.parking.proj_parking_api.jwt.JwtUserDetailsService;
 import com.parking.proj_parking_api.web.dto.UsuarioLoginDto;
 import com.parking.proj_parking_api.web.dto.UsuarioResponseDto;
 import com.parking.proj_parking_api.web.exception.ErrorMessage;
+//import org.springframework.http.MediaType;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -48,8 +49,8 @@ public class AutenticacaoController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             }
         )
-
-        @PostMapping("/auth")
+        
+        @PostMapping("/auth")        
         public  ResponseEntity<?> autenticar(@Valid @RequestBody UsuarioLoginDto dto, HttpServletRequest request) {
         log.info("Processo de autenticação pelo login {}", dto.getUsername());
         try {
@@ -72,5 +73,4 @@ public class AutenticacaoController {
                     .badRequest()
                     .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, "Credenciais Inválidas"));
     } 
-
 }
