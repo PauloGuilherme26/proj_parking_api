@@ -62,7 +62,13 @@
     		<groupId>net.sf.jasperreports</groupId>
     		<artifactId>jasperreports</artifactId>
     		<version>7.0.7</version>							
-		</dependency> 
+		</dependency> 		
+
+		<dependency>
+        	<groupId>net.sf.jasperreports</groupId>
+        	<artifactId>jasperreports-pdf</artifactId>
+        	<version>7.0.7</version>
+    	</dependency>
 
 		<dependency>
 			<groupId>com.mysql</groupId>
