@@ -226,7 +226,7 @@ public class EstacionamentoController {
     @PreAuthorize("hasRole('CLIENTE')")
     public ResponseEntity <Void> getRelatorio(HttpServletResponse response, @AuthenticationPrincipal JwtUserDetails user) throws IOException {
         String cpf = clienteService.buscarPorUsuarioId(user.getId()).getCpf();
-        jasperService.addParams("cpf", cpf);
+        jasperService.addParams("CPF", cpf);
 
         byte [] bytes = jasperService.gerarPdf();
 
