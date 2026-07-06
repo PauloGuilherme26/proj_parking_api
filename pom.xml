@@ -61,20 +61,8 @@
 		<dependency>
     		<groupId>net.sf.jasperreports</groupId>
     		<artifactId>jasperreports</artifactId>
-    		<version>7.0.7</version>
-				<exclusions>
-        			<exclusion>
-            			<groupId>com.fasterxml.jackson.dataformat</groupId>
-            			<artifactId>jackson-dataformat-xml</artifactId>
-        			</exclusion>
-    			</exclusions>			
-		</dependency>
-
-		<dependency>
-    		<groupId>net.sf.jasperreports</groupId>
-    		<artifactId>jasperreports-pdf</artifactId>
-    		<version>7.0.7</version>
-		</dependency>
+    		<version>7.0.7</version>							
+		</dependency> 
 
 		<dependency>
 			<groupId>com.mysql</groupId>

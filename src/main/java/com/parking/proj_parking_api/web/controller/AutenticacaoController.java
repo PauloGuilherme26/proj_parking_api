@@ -49,8 +49,7 @@ public class AutenticacaoController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             }
         )
-
-        //@PostMapping(path ="/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+        
         @PostMapping("/auth")        
         public  ResponseEntity<?> autenticar(@Valid @RequestBody UsuarioLoginDto dto, HttpServletRequest request) {
         log.info("Processo de autenticação pelo login {}", dto.getUsername());
