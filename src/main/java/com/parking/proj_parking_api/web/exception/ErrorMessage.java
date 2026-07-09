@@ -74,7 +74,6 @@ private void addErrors(BindingResult result) {
     for (FieldError fieldError: result.getFieldErrors()) {      //getFieldErrors - Listar campos de erros 
         this.errors.put(fieldError.getField(), fieldError.getDefaultMessage()); //Cada erro = uma entrada no mapa
     }             //       chave = campo      e       valor = message
-
 }
 
 
