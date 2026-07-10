@@ -14,13 +14,13 @@ import lombok.Setter;
 @AllArgsConstructor
 public class ClienteCreateDto {
 
-@NotBlank
-@Size(min = 5, max = 100)
+@NotBlank(message = "{NotBlank.clienteCreateDto.nome}")
+@Size(min = 5, max = 100, message = "{Size.clienteCreateDto.nome}")
 private String nome;
 
-@NotBlank
-@Size(min = 11, max = 11)
-@CPF                        //CPF tanto com 11 como CPF com 14. O que restringiu a 11 caracteres foi a anotação Size. 
+@NotBlank(message = "{NotBlank.clienteCreateDto.cpf}")
+@Size(min = 11, max = 11, message = "{Size.clienteCreateDto.cpf}")
+@CPF(message = "{CPF.clienteCreateDto.cpf}")    //CPF tanto com 11 como CPF com 14. O que restringiu a 11 caracteres foi a anotação Size. 
 private String cpf;
 
 
