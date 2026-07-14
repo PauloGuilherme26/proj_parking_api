@@ -8,6 +8,8 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.servlet.NoHandlerFoundException;
+
 import com.parking.proj_parking_api.exception.UsernameUniqueViolationException;
 import com.parking.proj_parking_api.exception.VagaDisponivelException;
 import com.parking.proj_parking_api.exception.CodigoUniqueViolationException;
@@ -21,6 +23,8 @@ import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 @Slf4j
@@ -142,6 +146,28 @@ public class ApiExceptionHandler {
             .status(HttpStatus.BAD_REQUEST)
             .contentType(MediaType.APPLICATION_JSON)
             .body(new ErrorMessage(request, HttpStatus.BAD_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(NoHandlerFoundException.class)                         
+    public ResponseEntity <ErrorMessage> noHandlerFoundException ( NoHandlerFoundException ex, HttpServletRequest request ) {
+        ErrorMessage error = new ErrorMessage(
+            request, HttpStatus.NOT_FOUND, HttpStatus.NOT_FOUND.getReasonPhrase());
+        log.error("Resource not found {} {} ", error, ex.getMessage());
+        return ResponseEntity
+            .status(HttpStatus.NOT_FOUND)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(error);
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)                         
+    public ResponseEntity <ErrorMessage> httpRequestMethodNotSupportedException ( HttpRequestMethodNotSupportedException ex, HttpServletRequest request ) {
+        ErrorMessage error = new ErrorMessage(
+            request, HttpStatus.METHOD_NOT_ALLOWED, HttpStatus.METHOD_NOT_ALLOWED.getReasonPhrase());
+        log.error("Method Not Allowed {} {} ", error, ex.getMessage());
+        return ResponseEntity
+            .status(HttpStatus.METHOD_NOT_ALLOWED)
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(error);
     }
 
     @ExceptionHandler(Exception.class)                         // Erro que não for nenhum dos anteriores
