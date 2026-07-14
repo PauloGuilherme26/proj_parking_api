@@ -17,6 +17,8 @@ import com.parking.proj_parking_api.exception.PasswordInvalidException;
 import com.parking.proj_parking_api.exception.ReciboCheckInNotFoundException;
 
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -87,6 +89,27 @@ public class ApiExceptionHandler {
                 result, 
                 messageSource)
             );
+    }
+
+    // Para @PathVariable / @RequestParam
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity <ErrorMessage> constraintViolationException (ConstraintViolationException ex, HttpServletRequest request) {
+
+        HttpStatus status = HttpStatus.UNPROCESSABLE_ENTITY;
+
+        String field = "";
+        String message = "";
+
+        // Extraimos os erros diretamente das "violações"
+        for (ConstraintViolation<?> violation : ex.getConstraintViolations()) {
+            String path = violation.getPropertyPath().toString();
+
+            //Limpa o nome do método do caminho (ex: getByCodigo -> codigo)
+            field = path.contains(".") ? path.substring(path.lastIndexOf(".") +1) : path;
+            message = violation.getMessage();
+        }
+        
+        return ResponseEntity.status(status).body(new ErrorMessage(request, status, field, message));
     }
 
     @ExceptionHandler(
