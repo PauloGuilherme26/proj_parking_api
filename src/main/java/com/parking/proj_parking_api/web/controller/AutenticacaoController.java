@@ -45,7 +45,9 @@ public class AutenticacaoController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
             @ApiResponse (responseCode = "400", description = "Credenciais inválidas",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-             @ApiResponse (responseCode = "422", description = "Campo(s) inválido(s)",
+            @ApiResponse (responseCode = "422", description = "Campo(s) inválido(s)",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             }
         )

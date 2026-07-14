@@ -46,7 +46,9 @@ public class UsuarioController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
             @ApiResponse (responseCode = "409", description = "Usuário e-mail já cadastrado no sistema",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-             @ApiResponse (responseCode = "422", description = "Recurso não processado por dados de entrada inválidos",
+            @ApiResponse (responseCode = "422", description = "Recurso não processado por dados de entrada inválidos",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         }
     )
@@ -66,6 +68,8 @@ public class UsuarioController {
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "404", description = "Recurso não encontrado!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),    
         }
     )
 
@@ -86,8 +90,9 @@ public class UsuarioController {
             @ApiResponse (responseCode = "403", description = "Usuário sem permissão para acessar esse recurso!",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "422", description = "Campos inválidos ou mal formatados!",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))    
-                
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),       
         }
     )
     //ResponseEntity<UsuarioResponseDto> - Corpo de resposta (atributos da classe UsuarioResponseDto) apos execução do método.
@@ -121,7 +126,9 @@ public class UsuarioController {
             @ApiResponse (responseCode = "200", description = "Listagem gerada com sucesso!",
                 content = @Content(mediaType = "application/json", array = @ArraySchema(schema = @Schema(implementation = UsuarioResponseDto.class)))),
             @ApiResponse (responseCode = "403", description = "Usuário sem permissão para acessar esse recurso!",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class)))              
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),                  
         }
     )
 

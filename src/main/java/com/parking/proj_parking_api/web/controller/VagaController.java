@@ -47,7 +47,10 @@ public class VagaController {
                     schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "422", description = "Recurso não processado por falta de dados ou dados inválidos",
                     content = @Content(mediaType = "application/json;charset=UTF-8", 
-                    schema = @Schema(implementation = ErrorMessage.class))),            
+                    schema = @Schema(implementation = ErrorMessage.class))),       
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json", 
+                    schema = @Schema(implementation = ErrorMessage.class))),             
         }
     )
 
@@ -71,6 +74,9 @@ public class VagaController {
                 schema = @Schema(implementation = VagaResponseDto.class))),
             @ApiResponse (responseCode = "404", description = "Vaga não localizada!",
                 content = @Content(mediaType = "application/json;charset=UTF-8", 
+                schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", 
                 schema = @Schema(implementation = ErrorMessage.class))),
         }
     )

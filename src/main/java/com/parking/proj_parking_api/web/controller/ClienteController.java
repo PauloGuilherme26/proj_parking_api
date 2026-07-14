@@ -60,6 +60,8 @@ public class ClienteController {
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),    
         }
     )
 
@@ -85,6 +87,8 @@ public class ClienteController {
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),    
         }
     )
 
@@ -120,7 +124,9 @@ public class ClienteController {
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE!",
                 content = @Content(mediaType = "application/json; charset=UTF-8", 
                     schema = @Schema(implementation = ErrorMessage.class))
-            )              
+            ),   
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         } )
 
     @GetMapping                 // Listar todos os clientes.
@@ -138,7 +144,10 @@ public class ClienteController {
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = UsuarioResponseDto.class))
             ),            
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
-                content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))
+            ),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         } )
 
     @GetMapping("/detalhes")    // Listar detalhes do próprio cliente.            
