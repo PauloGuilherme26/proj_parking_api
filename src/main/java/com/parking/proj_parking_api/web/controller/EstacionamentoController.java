@@ -24,6 +24,7 @@ import com.parking.proj_parking_api.service.EstacionamentoService;
 import com.parking.proj_parking_api.service.JasperService;
 import com.parking.proj_parking_api.web.dto.EstacionamentoCreateDto;
 import com.parking.proj_parking_api.web.dto.EstacionamentoResponseDto;
+import com.parking.proj_parking_api.web.dto.PageableClienteVagaDto;
 import com.parking.proj_parking_api.web.dto.PageableDto;
 import com.parking.proj_parking_api.web.dto.mapper.ClienteVagaMapper;
 import com.parking.proj_parking_api.web.dto.mapper.PageAbleMapper;
@@ -84,6 +85,10 @@ public class EstacionamentoController {
                     @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
                             content = @Content(mediaType = "application/json;charset=UTF-8", 
                             schema = @Schema(implementation = ErrorMessage.class))),    
+
+                    @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = "application/json", 
+                            schema = @Schema(implementation = ErrorMessage.class))),
             })
 
     @PostMapping("/check-in")            // Criar um Checkin.
@@ -126,7 +131,11 @@ public class EstacionamentoController {
 
                     @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
                             content = @Content(mediaType = "application/json;charset=UTF-8", 
-                            schema = @Schema(implementation = ErrorMessage.class))),    
+                            schema = @Schema(implementation = ErrorMessage.class))),   
+                            
+                    @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = "application/json", 
+                            schema = @Schema(implementation = ErrorMessage.class))),
             })
 
     @PutMapping("/check-out/{recibo}")   
@@ -159,25 +168,29 @@ public class EstacionamentoController {
             responses = {       
                     @ApiResponse (responseCode = "200", description = "Recurso localizado com sucesso",
                             content = @Content(mediaType = "application/json;charset=UTF-8", 
-                            schema = @Schema(implementation = PageableDto.class))),
+                            schema = @Schema(implementation = PageableClienteVagaDto.class))),
                     
                     @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
                             content = @Content(mediaType = "application/json;charset=UTF-8", 
-                            schema = @Schema(implementation = ErrorMessage.class))),    
+                            schema = @Schema(implementation = ErrorMessage.class))),   
+                            
+                    @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = "application/json", 
+                            schema = @Schema(implementation = ErrorMessage.class))),
             } )
 
     @GetMapping("/cpf/{cpf}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity <PageableDto> getAllEstacionamentosPorCpf ( 
-        @PathVariable 
-        String cpf, 
-
-        @Parameter(hidden = true)
-        @PageableDefault(size = 5, sort = "dataEntrada", direction = Sort.Direction.ASC) 
-        Pageable pageable ) 
-        {        
+    public ResponseEntity <PageableDto<ClienteVagaProjection>> getAllEstacionamentosPorCpf ( @PathVariable 
+                                                                      String cpf, 
+                                                                      @Parameter(hidden = true)
+                                                                      @PageableDefault(size = 5, 
+                                                                                       sort = "dataEntrada", 
+                                                                                       direction = Sort.Direction.ASC) 
+                                                                      Pageable pageable) 
+    {
         Page <ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorClienteCpf(cpf, pageable);
-        PageableDto dto = PageAbleMapper.toDto(projection);
+        PageableDto<ClienteVagaProjection> dto = PageAbleMapper.toDto(projection);
         return ResponseEntity.ok(dto);        
     }
 
@@ -200,25 +213,29 @@ public class EstacionamentoController {
             responses = {       
                     @ApiResponse (responseCode = "200", description = "Recurso localizado com sucesso",
                             content = @Content(mediaType = "application/json;charset=UTF-8", 
-                            schema = @Schema(implementation = EstacionamentoResponseDto.class))),
+                            schema = @Schema(implementation = PageableClienteVagaDto.class))),
                     
                     @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
                             content = @Content(mediaType = "application/json;charset=UTF-8", 
                             schema = @Schema(implementation = ErrorMessage.class))),    
+                   
+                    @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                            content = @Content(mediaType = "application/json", 
+                            schema = @Schema(implementation = ErrorMessage.class))),
             } )
 
     @GetMapping
     @PreAuthorize("hasRole('CLIENTE')")
-    public ResponseEntity <PageableDto> getAllEstacionamentosDoCliente ( 
-        @AuthenticationPrincipal 
-        JwtUserDetails user, 
-
-        @Parameter(hidden = true)
-        @PageableDefault(size = 5, sort = "dataEntrada", direction = Sort.Direction.ASC) 
-        Pageable pageable ) 
-        {        
+    public ResponseEntity <PageableDto<ClienteVagaProjection>> getAllEstacionamentosDoCliente ( @AuthenticationPrincipal 
+                                                                         JwtUserDetails user, 
+                                                                         @Parameter(hidden = true)
+                                                                         @PageableDefault(size = 5, 
+                                                                                          sort = "dataEntrada", 
+                                                                                          direction = Sort.Direction.ASC) 
+                                                                         Pageable pageable) 
+    {        
         Page <ClienteVagaProjection> projection = clienteVagaService.buscarTodosPorUsuarioId(user.getId(), pageable);
-        PageableDto dto = PageAbleMapper.toDto(projection);
+        PageableDto<ClienteVagaProjection> dto = PageAbleMapper.toDto(projection);
         return ResponseEntity.ok(dto);        
     }
 

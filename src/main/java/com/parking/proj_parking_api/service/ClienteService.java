@@ -44,7 +44,9 @@ public class ClienteService {
 
     @Transactional(readOnly = true)
     public Cliente buscarPorUsuarioId(long id) {
-        return clienteRepository.findByUsuarioId(id);
+        return clienteRepository.findByUsuarioId(id).orElseThrow(
+                () -> new EntityNotFoundException(String.format("Cliente id=%s não encontrado no sistema", id))
+        );
     }
 
     @Transactional(readOnly = true)

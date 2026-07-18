@@ -17,12 +17,12 @@ import lombok.ToString;
 
 public class UsuarioLoginDto {
 
-    @NotBlank                       //Validação (não nulo, pelo menos caractere).
-    @Email(message = "formato de e-mail está inválido", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
+    @NotBlank(message = "{NotBlank.usuarioLoginDto.username}")      //Validação (não nulo, pelo menos caractere).
+    @Email(message = "{Email.usuarioLoginDto.username}", regexp = "^[a-z0-9.+-]+@[a-z0-9.-]+\\.[a-z]{2,}$")
     private String username;
 
-    @NotBlank
-    @Size(min = 6, max = 6)         //Validação.
+    @NotBlank(message = "{NotBlank.usuarioLoginDto.password}")
+    @Size(min = 6, max = 6, message = "{Size.usuarioLoginDto.password}")         //Validação.
     private String password;
 
 }

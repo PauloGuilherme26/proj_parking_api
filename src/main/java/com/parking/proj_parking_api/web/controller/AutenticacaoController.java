@@ -13,9 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.parking.proj_parking_api.jwt.JwtToken;
 import com.parking.proj_parking_api.jwt.JwtUserDetailsService;
 import com.parking.proj_parking_api.web.dto.UsuarioLoginDto;
-import com.parking.proj_parking_api.web.dto.UsuarioResponseDto;
 import com.parking.proj_parking_api.web.exception.ErrorMessage;
-//import org.springframework.http.MediaType;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -42,10 +40,12 @@ public class AutenticacaoController {
         @Operation(summary = "Autenticar na API.", description = "Recurso de autenticação na API.",
         responses = {
             @ApiResponse (responseCode = "200", description = "Autenticação realizada com sucesso e retorno de um bearer token",
-                content = @Content(mediaType = "application/json", schema = @Schema(implementation = UsuarioResponseDto.class))),
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = JwtToken.class))),
             @ApiResponse (responseCode = "400", description = "Credenciais inválidas",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
-             @ApiResponse (responseCode = "422", description = "Campo(s) inválido(s)",
+            @ApiResponse (responseCode = "422", description = "Campo(s) inválido(s)",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
                 content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
             }
         )

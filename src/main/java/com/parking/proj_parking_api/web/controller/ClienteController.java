@@ -20,6 +20,7 @@ import com.parking.proj_parking_api.service.ClienteService;
 import com.parking.proj_parking_api.service.UsuarioService;
 import com.parking.proj_parking_api.web.dto.ClienteCreateDto;
 import com.parking.proj_parking_api.web.dto.ClienteResponseDto;
+import com.parking.proj_parking_api.web.dto.PageableClienteDto;
 import com.parking.proj_parking_api.web.dto.PageableDto;
 import com.parking.proj_parking_api.web.dto.UsuarioResponseDto;
 import com.parking.proj_parking_api.web.dto.mapper.ClienteMapper;
@@ -60,6 +61,8 @@ public class ClienteController {
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),    
         }
     )
 
@@ -85,6 +88,8 @@ public class ClienteController {
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE",
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),    
         }
     )
 
@@ -115,17 +120,22 @@ public class ClienteController {
         responses = {
             @ApiResponse (responseCode = "200", description = "Listagem gerada com sucesso!",
                 content = @Content(mediaType = "application/json; charset=UTF-8", 
-                    schema = @Schema(implementation = ClienteResponseDto.class))
+                    schema = @Schema(implementation = PageableClienteDto.class))
             ),
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de CLIENTE!",
                 content = @Content(mediaType = "application/json; charset=UTF-8", 
                     schema = @Schema(implementation = ErrorMessage.class))
-            )              
+            ),   
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         } )
 
     @GetMapping                 // Listar todos os clientes.
     @PreAuthorize("hasRole('ADMIN')")     //Permissão de acesso do perfil Admin  
-    public ResponseEntity<PageableDto> getAll (@Parameter(hidden = true) @PageableDefault(size = 5, sort = {"nome"}) Pageable pageable) {
+    public ResponseEntity<PageableDto<ClienteProjection>> getAll (@Parameter(hidden = true) 
+                                                                  @PageableDefault(size = 5, sort = {"nome"}) 
+                                                                  Pageable pageable) 
+    {                
         Page<ClienteProjection> clientes = clienteService.buscarTodos(pageable);
         return ResponseEntity.ok(PageAbleMapper.toDto(clientes));
     }   
@@ -138,12 +148,16 @@ public class ClienteController {
                 content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = UsuarioResponseDto.class))
             ),            
             @ApiResponse (responseCode = "403", description = "Recurso não permitido ao perfil de ADMIN",
-                content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))),
+                content = @Content(mediaType = "application/json;charset=UTF-8", schema = @Schema(implementation = ErrorMessage.class))
+            ),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorMessage.class))),
         } )
 
     @GetMapping("/detalhes")    // Listar detalhes do próprio cliente.            
     @PreAuthorize("hasRole('CLIENTE')")   //Permissão de acesso do perfil Cliente    
-    public ResponseEntity<ClienteResponseDto> getDetalhes (@AuthenticationPrincipal JwtUserDetails userDetails) {
+    public ResponseEntity<ClienteResponseDto> getDetalhes (@AuthenticationPrincipal JwtUserDetails userDetails) 
+    {
         Cliente cliente = clienteService.buscarPorUsuarioId(userDetails.getId());
         return ResponseEntity.ok(ClienteMapper.toDto(cliente));
     }   

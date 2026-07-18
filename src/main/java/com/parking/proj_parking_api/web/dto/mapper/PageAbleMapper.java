@@ -7,10 +7,11 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor (access = AccessLevel.PRIVATE)
-public class PageAbleMapper {
+public class PageAbleMapper<T> {
 
-    public static PageableDto toDto(Page page) {
+    @SuppressWarnings("unchecked")  //Esconde o aviso de Warnings
+    public static <T> PageableDto<T> toDto(Page<T> page) {
         return new ModelMapper().map(page, PageableDto.class);
     }
-
 }
+

@@ -2,7 +2,10 @@ package com.parking.proj_parking_api.web.exception;
 
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
+
+import org.springframework.context.MessageSource;
 import org.springframework.http.HttpStatus;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -48,12 +51,38 @@ public ErrorMessage(HttpServletRequest request, HttpStatus status, String messag
     addErrors(result);
 }
 
+public ErrorMessage(HttpServletRequest request, HttpStatus status, String message, BindingResult result, MessageSource messageSource) {
+    this.path = request.getRequestURI();
+    this.method = request.getMethod();
+    this.status = status.value();
+    this.statusText = status.getReasonPhrase();
+    this.message = message;
+    addErrors(result, messageSource, request.getLocale());
+}
+
+public ErrorMessage(HttpServletRequest request, HttpStatus status, String field, String message) {
+    this.path = request.getRequestURI();
+    this.method = request.getMethod();
+    this.status = status.value();
+    this.statusText = status.getReasonPhrase();
+    this.message = message;
+    this.errors = Map.of(field, message);
+}
+
+private void addErrors(BindingResult result, MessageSource messageSource, Locale locale) {
+    this.errors = new HashMap<>();              
+    for (FieldError fieldError: result.getFieldErrors()) {    
+        String code = fieldError.getCodes()[0];
+        String message = messageSource.getMessage(code, fieldError.getArguments(), locale);  
+        this.errors.put(fieldError.getField(), message); 
+    }
+}
+
 private void addErrors(BindingResult result) { 
-    this.errors = new HashMap<>();               //Criar um mapa vazio para incluir os erros.(chave = campo e valor = message)
+    this.errors = new HashMap<>();                              //Criar um mapa vazio para incluir os erros.(chave = campo e valor = message)
     for (FieldError fieldError: result.getFieldErrors()) {      //getFieldErrors - Listar campos de erros 
         this.errors.put(fieldError.getField(), fieldError.getDefaultMessage()); //Cada erro = uma entrada no mapa
     }             //       chave = campo      e       valor = message
-
 }
 
 

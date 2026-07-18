@@ -4,6 +4,7 @@ import java.net.URI;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,12 +28,16 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 
 @Tag(name = "Vagas", description = "Contem todas as operações relativas ao recurso de um vagas.")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("api/v1/vagas")
+@Validated
 public class VagaController {
 
     private final VagaService vagaService;
@@ -47,7 +52,10 @@ public class VagaController {
                     schema = @Schema(implementation = ErrorMessage.class))),
             @ApiResponse (responseCode = "422", description = "Recurso não processado por falta de dados ou dados inválidos",
                     content = @Content(mediaType = "application/json;charset=UTF-8", 
-                    schema = @Schema(implementation = ErrorMessage.class))),            
+                    schema = @Schema(implementation = ErrorMessage.class))),       
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                    content = @Content(mediaType = "application/json", 
+                    schema = @Schema(implementation = ErrorMessage.class))),             
         }
     )
 
@@ -72,12 +80,20 @@ public class VagaController {
             @ApiResponse (responseCode = "404", description = "Vaga não localizada!",
                 content = @Content(mediaType = "application/json;charset=UTF-8", 
                 schema = @Schema(implementation = ErrorMessage.class))),
+            @ApiResponse (responseCode = "500", description = "Internal Server Error",
+                content = @Content(mediaType = "application/json", 
+                schema = @Schema(implementation = ErrorMessage.class))),
         }
     )
 
     @GetMapping("/{codigo}")
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity <VagaResponseDto> getByCodigo(@PathVariable String codigo) {
+    public ResponseEntity <VagaResponseDto> getByCodigo(@PathVariable 
+                                                        @Size(min = 4, max = 4, message = "Código deve ter 4 caracteres")
+                                                        @Pattern(regexp = "^[A-Z]-\\d{2}$", message = "O código deve ter o formato 'X-00'")
+                                                        @NotBlank(message = "Código deve ser informado")
+                                                        String codigo) {
+                                                            
         Vaga vaga = vagaService.buscarPorCodigo(codigo);
         return ResponseEntity.ok(VagaMapper.toDto(vaga));          
     }             

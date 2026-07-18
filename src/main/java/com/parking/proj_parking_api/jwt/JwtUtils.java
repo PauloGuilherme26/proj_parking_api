@@ -5,6 +5,7 @@ import java.security.Key;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Map;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtException;
@@ -36,7 +37,7 @@ public class JwtUtils {
         return Date.from(end.atZone(ZoneId.systemDefault()).toInstant());
     }
 
-    public static JwtToken createToken (String username, String role) {
+    public static JwtToken createToken (Long id, String username, String role) {
         Date issuedAt = new Date();
         Date limit = toExpireDate(issuedAt);
         
@@ -46,7 +47,7 @@ public class JwtUtils {
                 .setIssuedAt(issuedAt)
                 .setExpiration(limit)
                 .signWith(generateKey(), SignatureAlgorithm.HS256)
-                .claim("role", role)
+                .addClaims(Map.of("id", id, "role", role)) // Era para ser: claims
                 .compact();
            
             return new JwtToken(token);

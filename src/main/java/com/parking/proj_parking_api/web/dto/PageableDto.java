@@ -7,9 +7,9 @@ import lombok.*;
 
 @Getter
 @Setter
-public class PageableDto {
+public class PageableDto<T> {
 
-    private List content = new ArrayList<>();
+    private List<?> content = new ArrayList<>();
 
     private boolean first;
 
